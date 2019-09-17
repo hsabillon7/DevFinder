@@ -1,0 +1,25 @@
+{
+  "name": "devfinder",
+  "version": "1.0.0",
+  "description": "Portal de publicacion de ofertas de trabajo para desarrolladores",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hsabillon7/DevFinder.git"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "mongoose",
+    "handlebars"
+  ],
+  "author": "Hector Sabillon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hsabillon7/DevFinder/issues"
+  },
+  "homepage": "https://github.com/hsabillon7/DevFinder#readme"
+}
