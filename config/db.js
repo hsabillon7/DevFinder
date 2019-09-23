@@ -10,3 +10,6 @@ mongoose.connect(process.env.DATABASE, {
 mongoose.connection.on("error", error => {
   console.log(error);
 });
+
+// Importando los modelos
+require("../models/Vacante");
