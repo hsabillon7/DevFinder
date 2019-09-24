@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css?family=Rubik:400,700,900&display=swap" rel="stylesheet">
     {{!-- Hoja de estilos personalizada  --}}
     <link rel="stylesheet" href="/css/app.css">
+    {{!-- Hoja de estilos para trix (WYSIWYG) --}}
+    <link rel="stylesheet" href="/css/trix.css">
     <title>{{nombrePagina}}</title>
 </head>
 
@@ -41,6 +43,9 @@
     <div class="contenido-principal contenedor">
         {{{body}}}
     </div>
+
+    {{!-- Script para trix (WYSIWGY) --}}
+    <script src="/js/trix.js"></script>
 </body>
 
 </html>

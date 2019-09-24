@@ -36,6 +36,15 @@
         <h3>Descripción del puesto</h3>
         <div class="campo descripcion">
             {{!-- Implementar un WYSIWYG --}}
+            <label>Descripción</label>
+            <input type="hidden" name="descripcion" id="x">
+            <trix-editor input="x"></trix-editor>
         </div>
+
+        <h3>Conocimientos</h3>
+        <ul class="lista-conocimientos">
+            {{#selectSkills cualquierCosa}}
+            {{/selectSkills}}
+        </ul>
     </form>
 </main>
