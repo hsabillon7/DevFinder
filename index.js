@@ -7,6 +7,7 @@ require("./config/db");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
+const bodyParser = require("body-parser");
 
 // Habilitando el archivo de variables de entorno
 require("dotenv").config({ path: "variables.env" });
