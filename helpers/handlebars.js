@@ -34,9 +34,17 @@ module.exports = {
 
     // Mostrar las skills
     skills.forEach(skill => {
-      html += `<li>${skill}</li>`;
+      html += `<li ${
+        selected.includes(skill) ? 'class = "activo"' : ""
+      }>${skill}</li>`;
     });
 
     return (options.fn().html = html);
+  },
+
+  tipoContrato: (selected, options) => {
+    return options
+      .fn()
+      .replace(new RegExp(` value="${selected}"`), '$& selected="selected"');
   }
 };

@@ -1,0 +1,56 @@
+<main class="contenedor">
+    <form action="/vacante/editar/{{vacante.url}}" method="post" class="default-form">
+        <h3>Información general</h3>
+
+        <div class="campo">
+            <label for="titulo">Título</label>
+            <input type="text" name="titulo" placeholder="React developer, Node fullstack, Vue Developer..."
+                value={{vacante.titulo}}>
+        </div>
+
+        <div class="campo">
+            <label for="empresa">Empresa</label>
+            <input type="text" name="empresa" placeholder="Empresa contratante" value="{{vacante.empresa}}">
+        </div>
+
+        <div class="campo">
+            <label for="ubicacion">Ubicación</label>
+            <input type="text" name="ubicacion" placeholder="País de origen o remoto" value="{{vacante.ubicacion}}">
+        </div>
+
+        <div class="campo">
+            <label for="salario">Salario (USD)</label>
+            <input type="text" name="salario" placeholder="$1200" value="{{vacante.salario}}">
+        </div>
+
+        <div class="campo">
+            <label for="contrato">Contrato</label>
+            <select name="contrato">
+                <option value="" disabled>Selecciona una opción</option>
+                <option value="freelance">Freelance</option>
+                <option value="medio tiempo">Medio tiempo</option>
+                <option value="tiempo completo">Tiempo completo</option>
+                <option value="por proyecto">Por proyecto</option>
+            </select>
+        </div>
+
+        <h3>Descripción del puesto</h3>
+        <div class="campo descripcion">
+            {{!-- Implementar un WYSIWYG --}}
+            <label>Descripción</label>
+            <input type="hidden" name="descripcion" id="x" value="{{{vacante.descripcion}}}">
+            <trix-editor input="x"></trix-editor>
+        </div>
+
+        <h3>Conocimientos</h3>
+        <ul class="lista-conocimientos">
+            {{#selectSkills vacante.skills}}
+            {{/selectSkills}}
+        </ul>
+
+        <div class="campo centrar-horizontalmente">
+            <input type="hidden" name="skills" id="skills">
+            <input type="submit" value="Publicar" class="btn btn-azul">
+        </div>
+    </form>
+</main>
