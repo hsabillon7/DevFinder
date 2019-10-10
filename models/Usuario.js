@@ -49,4 +49,16 @@ usuarioSchema.pre("save", function(next) {
   });
 });
 
+// Hooks para poder pasar los errores de MongoBD hacia express validator
+usuarioSchema.post("save", function(error, doc, next) {
+  // Verificar que es un error de MongoDB
+  if (error.name === "MongoError" && error.code === 11000) {
+    next(
+      "Ya exite un usuario con la dirección de correo electrónico ingresada"
+    );
+  } else {
+    next(error);
+  }
+});
+
 module.exports = mongoose.model("Usuario", usuarioSchema);

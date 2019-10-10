@@ -28,12 +28,22 @@ module.exports = () => {
         .not()
         .isEmpty()
         .escape(),
-      check("email", "El correo electrónico es requerido")
+      check("email", "El correo electrónico es requerido.")
         .not()
         .isEmpty(),
-      check("email", "El correo electrónico no es vålido")
+      check("email", "El correo electrónico no es vålido.")
         .isEmail()
-        .normalizeEmail()
+        .normalizeEmail(),
+      check("password", "La contraseña es requerida.")
+        .not()
+        .isEmpty(),
+      check("confirmpassword", "Debe ingresar la confirmación de tu contraseña")
+        .not()
+        .isEmpty(),
+      check(
+        "confirmpassword",
+        "La confirmación de la contraseña no coincide con tu contraseña"
+      ).custom((value, { req }) => value === req.body.password)
     ],
     usuarioController.agregarUsuario
   );
