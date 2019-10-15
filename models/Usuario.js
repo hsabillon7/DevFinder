@@ -54,11 +54,34 @@ usuarioSchema.post("save", function(error, doc, next) {
   // Verificar que es un error de MongoDB
   if (error.name === "MongoError" && error.code === 11000) {
     next(
-      "Ya exite un usuario con la dirección de correo electrónico ingresada"
+      "Ya existe un usuario con la dirección de correo electrónico ingresada"
     );
   } else {
     next(error);
   }
 });
+
+// Realizar un método que automáticamente verifique el password ingresado
+// contra el almacenado (hash + salt)
+usuarioSchema.methods.compararPassword = function(candidatePassword) {
+  return bcrypt.compareSync(candidatePassword, this.password);
+};
+usuarioSchema.methods.comparePassword = function(candidatePassword) {
+  const user = this;
+
+  return new Promise((resolve, reject) => {
+    bcrypt.compare(candidatePassword, user.password, (err, isMatch) => {
+      if (err) {
+        return reject(err);
+      }
+
+      if (!isMatch) {
+        return reject(false);
+      }
+
+      resolve(true);
+    });
+  }).catch();
+};
 
 module.exports = mongoose.model("Usuario", usuarioSchema);

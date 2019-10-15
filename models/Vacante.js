@@ -46,7 +46,12 @@ const vacanteSchema = new mongoose.Schema({
       email: String,
       hojaVida: String
     }
-  ]
+  ],
+  autor: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Usuarios",
+    required: "El autor es obligatorio"
+  }
 });
 // Hooks para generar la URL (en Mongoose se conoce como middleware)
 vacanteSchema.pre("save", function(next) {
