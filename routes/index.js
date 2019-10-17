@@ -8,15 +8,31 @@ const authController = require("../controllers/authController");
 
 module.exports = () => {
   router.get("/", homeController.mostrarTrabajos);
-  router.get("/vacante/nueva", vacanteController.formularioNuevaVacante);
-  router.post("/vacante/nueva", vacanteController.agregarVacante);
+  router.get(
+    "/vacante/nueva",
+    authController.verificarUsuario,
+    vacanteController.formularioNuevaVacante
+  );
+  router.post(
+    "/vacante/nueva",
+    authController.verificarUsuario,
+    vacanteController.agregarVacante
+  );
 
   // Mostrar una vacante
   router.get("/vacante/:url", vacanteController.mostrarVacante);
 
   // Editar una vacante
-  router.get("/vacante/editar/:url", vacanteController.formularioEditarVacante);
-  router.post("/vacante/editar/:url", vacanteController.editarVacante);
+  router.get(
+    "/vacante/editar/:url",
+    authController.verificarUsuario,
+    vacanteController.formularioEditarVacante
+  );
+  router.post(
+    "/vacante/editar/:url",
+    authController.verificarUsuario,
+    vacanteController.editarVacante
+  );
 
   // Crear un usuario
   router.get("/crearCuenta", usuarioController.formularioCrearCuenta);
@@ -52,6 +68,16 @@ module.exports = () => {
   // Iniciar sesión
   router.get("/iniciarSesion", usuarioController.formularioInicioSesion);
   router.post("/iniciarSesion", authController.autenticarUsuario);
+
+  // Cerrar sesión
+  router.get("/cerrarSesion", authController.cerrarSesion);
+
+  // Administrar vacantes
+  router.get(
+    "/administrar",
+    authController.verificarUsuario,
+    authController.administrarVacantes
+  );
 
   return router;
 };

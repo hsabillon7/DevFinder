@@ -4,7 +4,9 @@ const Vacante = mongoose.model("Vacante");
 exports.formularioNuevaVacante = (req, res) => {
   res.render("nuevaVacante", {
     nombrePagina: "Nueva vacante",
-    tagline: "Llena el formulario y publica una nueva vacante"
+    tagline: "Llena el formulario y publica una nueva vacante",
+    cerrarSesion: true,
+    nombre: req.user.nombre
   });
 };
 // Opciones de querys Mongoose para CRUDS
@@ -50,8 +52,9 @@ exports.formularioEditarVacante = async (req, res, next) => {
 
   res.render("editarVacante", {
     nombrePagina: `Editar ${vacante.titulo}`,
-    barra: true,
-    vacante
+    vacante,
+    cerrarSesion: true,
+    nombre: req.user.nombre
   });
 };
 
