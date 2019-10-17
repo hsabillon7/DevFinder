@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/hsabillon7/DevFinder#readme",
   "dependencies": {
+    "axios": "^0.19.0",
     "bcrypt": "^3.0.6",
     "concurrently": "^4.1.2",
     "connect-flash": "^0.1.1",
@@ -39,7 +40,8 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "shortid": "^2.2.15",
-    "slug": "^1.1.0"
+    "slug": "^1.1.0",
+    "sweetalert2": "^8.18.4"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
