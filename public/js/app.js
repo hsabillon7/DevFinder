@@ -95,11 +95,25 @@ const accionesListado = e => {
         const url = `${location.origin}/vacante/eliminar/${e.target.dataset.eliminar}`;
 
         // Axios haga la petición de eliminación
-        axios.delete(url, { params: url }).then(function(respuesta) {
-          if (respuesta.status == 200) {
-            Swal.fire("¡Eliminada!", "Your file has been deleted.", "success");
-          }
-        });
+        axios
+          .delete(url, { params: url })
+          .then(function(respuesta) {
+            if (respuesta.status == 200) {
+              Swal.fire("¡Eliminada!", respuesta.data, "success");
+
+              // Eliminar la vacante seleccionada del DOM
+              e.target.parentElement.parentElement.parentElement.removeChild(
+                e.target.parentElement.parentElement
+              );
+            }
+          })
+          .catch(() =>
+            Swal.fire({
+              type: "error",
+              title: "Error",
+              text: " Hubo un error al momento de eliminar la vacante"
+            })
+          );
       }
     });
   }
