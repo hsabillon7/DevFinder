@@ -82,5 +82,18 @@ module.exports = () => {
     authController.administrarVacantes
   );
 
+  // Editar el perfil del usuario
+  router.get(
+    "/editarPerfil",
+    authController.verificarUsuario,
+    usuarioController.formularioEditarPerfil
+  );
+  router.post(
+    "/editarPerfil",
+    authController.verificarUsuario,
+    usuarioController.subirImagen,
+    usuarioController.editarPerfil
+  );
+
   return router;
 };
