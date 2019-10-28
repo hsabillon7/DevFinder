@@ -40,3 +40,38 @@
         </ul>
     </aside>
 </div>
+
+{{!-- Datos del reclutador y formulario de candidatos --}}
+<div class="contenedor datos-reclutador">
+    <div class="enviar-datos">
+        <h2>Contactar reclutador</h2>
+        <p>Llena el siguiente formulario, sube tu hoja de vida y pronto te contactaremos.</p>
+        <form action="/vacante/{{vacante.url}}" method="post" class="default-form" enctype="multipart/form-data">
+            <div class="campo">
+                <label for="nombre">Nombre</label>
+                <input type="text" name="nombre" placeholder="Ingresa tu nombre completo">
+            </div>
+            <div class="campo">
+                <label for="email">Correo electrónico</label>
+                <input type="email" name="email" placeholder="Ingresa tu correo electrónico">
+            </div>
+            <div class="campo">
+                <label for="hojaVida">Hoja de vida</label>
+                <input type="file" name="hojaVida">
+            </div>
+            <div class="campo">
+                <input type="submit" value="Enviar" class="btn btn-verde">
+            </div>
+        </form>
+    </div>
+
+    <div class="info-reclutador">
+        <h2>Información del reclutador</h2>
+        {{#if vacante.autor.nombre}}
+        <p>{{vacante.autor.nombre}}</p>
+        {{/if}}
+        {{#if vacante.autor.imagen}}
+        <img src="/uploads/perfiles/{{vacante.autor.imagen}}" />
+        {{/if}}
+    </div>
+</div>
