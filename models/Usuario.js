@@ -21,7 +21,8 @@ const usuarioSchema = new mongoose.Schema({
     trim: true
   },
   token: String,
-  expira: Date
+  expira: Date,
+  imagen: String
 });
 // Hooks (método) para hash + salt password
 usuarioSchema.pre("save", function(next) {

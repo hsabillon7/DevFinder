@@ -85,6 +85,11 @@ exports.editarPerfil = async (req, res) => {
     usuario.password = req.body.password;
   }
 
+  // Verificar si el usuario agrega una imagen
+  if (req.file) {
+    usuario.imagen = req.file.filename;
+  }
+
   // Guardar los cambios
   await usuario.save();
 
@@ -97,14 +102,57 @@ exports.editarPerfil = async (req, res) => {
 // Subir una imagen al servidor
 exports.subirImagen = (req, res, next) => {
   upload(req, res, function(error) {
-    if (error instanceof multer.MulterError) {
+    if (error) {
+      // Errores de multer
+      if (error instanceof multer.MulterError) {
+        if (error.code === "LIMIT_FILE_SIZE") {
+          req.flash("error", [
+            "El tamaño del archivo es demasiado grande. Máximo 200Kb"
+          ]);
+        } else {
+          req.flash("error", [error.message]);
+        }
+      } else {
+        // Errores del usuario
+        req.flash("error", [error.message]);
+      }
+      // Redireccionar
+      res.redirect("/administrar");
+      return;
+    } else {
       return next();
     }
   });
-  next();
+  // next();
 };
 
 // Opciones de configuracion de Multer
-const configuracionMulter = {};
+const configuracionMulter = {
+  // Tamaño máximo del archivo en bytes
+  limits: {
+    fileSize: 200000
+  },
+  // Dónde se almacena la imagen
+  storage: (fileStorage = multer.diskStorage({
+    destination: (req, res, cb) => {
+      cb(null, __dirname + "../../public/uploads/perfiles");
+    },
+    filename: (req, file, cb) => {
+      const extension = file.mimetype.split("/")[1];
+      cb(null, `${shortid.generate()}.${extension}`);
+    }
+  })),
+  // Verificar que es una imagen válida mediante el mimetype
+  // http://www.iana.org/assignments/media-types/media-types.xhtml
+  fileFilter(req, file, cb) {
+    if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+      // El callback se ejecuta como true or false
+      // se retorna true cuando se acepta la imagen
+      cb(null, true);
+    } else {
+      cb(new Error("Formato de archivo no válido. Solo JPEG o PNG."), false);
+    }
+  }
+};
 
 const upload = multer(configuracionMulter).single("imagen");
