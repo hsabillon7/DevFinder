@@ -123,7 +123,6 @@ exports.subirImagen = (req, res, next) => {
       return next();
     }
   });
-  // next();
 };
 
 // Opciones de configuracion de Multer

@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const Vacante = mongoose.model("Vacante");
+const multer = require("multer");
+const shortid = require("shortid");
 
 exports.formularioNuevaVacante = (req, res) => {
   res.render("nuevaVacante", {
@@ -107,4 +109,85 @@ const verificarUsuario = (vacante = {}, usuario = {}) => {
   }
 
   return true;
+};
+
+// Subir hojas de vida en PDF
+exports.subirHojaVida = (req, res, next) => {
+  upload(req, res, function(error) {
+    if (error) {
+      // Errores de multer
+      if (error instanceof multer.MulterError) {
+        if (error.code === "LIMIT_FILE_SIZE") {
+          req.flash("error", [
+            "El tamaño del archivo es demasiado grande. Máximo 100Kb"
+          ]);
+        } else {
+          req.flash("error", [error.message]);
+        }
+      } else {
+        // Errores del usuario
+        req.flash("error", [error.message]);
+      }
+      // Redireccionar
+      res.redirect("/back");
+      return;
+    } else {
+      return next();
+    }
+  });
+};
+
+// Opciones de configuracion de Multer
+const configuracionMulter = {
+  // Tamaño máximo del archivo en bytes
+  limits: {
+    fileSize: 100000
+  },
+  // Dónde se almacena la hoja de vida
+  storage: (fileStorage = multer.diskStorage({
+    destination: (req, res, cb) => {
+      cb(null, __dirname + "../../public/uploads/hojasDeVida");
+    },
+    filename: (req, file, cb) => {
+      const extension = file.mimetype.split("/")[1];
+      cb(null, `${shortid.generate()}.${extension}`);
+    }
+  })),
+  // Verificar que es una imagen válida mediante el mimetype
+  // http://www.iana.org/assignments/media-types/media-types.xhtml
+  fileFilter(req, file, cb) {
+    if (file.mimetype === "application/pdf") {
+      // El callback se ejecuta como true or false
+      // se retorna true cuando se acepta la imagen
+      cb(null, true);
+    } else {
+      cb(new Error("Formato de archivo no válido. Solo PDF."), false);
+    }
+  }
+};
+
+const upload = multer(configuracionMulter).single("hojaVida");
+
+// Almacena los candidatos en la base de datos
+exports.contactar = async (req, res, next) => {
+  const vacante = await Vacante.findOne({ url: req.params.url });
+
+  // Si no existe la vacante
+  if (!vacante) return next();
+
+  // Si existe la vacante, construir el objeto de tipo candidato
+  const nuevoCandidato = {
+    nombre: req.body.nombre,
+    email: req.body.email,
+    hojaVida: req.file.filename
+  };
+
+  // Almacenar la vacante
+  // Agregar el candidato en la última posición del arreglo
+  vacante.candidatos.push(nuevoCandidato);
+  await vacante.save();
+
+  // Mensaje flash y redireccionar
+  req.flash("correcto", ["Tu hoja de vida ha sido envidada correctamente"]);
+  res.redirect("/");
 };

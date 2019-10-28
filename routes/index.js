@@ -95,5 +95,12 @@ module.exports = () => {
     usuarioController.editarPerfil
   );
 
+  // Recibir información de candidatos
+  router.post(
+    "/vacante/:url",
+    vacanteController.subirHojaVida,
+    vacanteController.contactar
+  );
+
   return router;
 };
