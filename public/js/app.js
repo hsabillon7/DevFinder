@@ -116,5 +116,8 @@ const accionesListado = e => {
           );
       }
     });
+  } else if (e.target.tagName === "A") {
+    // Si no es el botón de eliminar, ir al href correspondiente
+    window.location.href = e.target.href;
   }
 };

@@ -191,3 +191,25 @@ exports.contactar = async (req, res, next) => {
   req.flash("correcto", ["Tu hoja de vida ha sido envidada correctamente"]);
   res.redirect("/");
 };
+
+// Muestra los candidatos registrados a una vacante
+exports.mostrarCandidatos = async (req, res, next) => {
+  // Obtener la vacante
+  const vacante = await Vacante.findById(req.params.id);
+
+  // Si no se encuentra la vacante
+  if (!vacante) return next();
+
+  // Verificar que el usuario autenticado sea igual al autor de la vacante
+  if (!vacante.autor.equals(req.user._id)) {
+    return next();
+  }
+
+  res.render("candidatos", {
+    nombrePagina: `Candidatos vacante - ${vacante.titulo}`,
+    cerrarSesion: true,
+    nombre: req.user.nombre,
+    imagen: req.user.imagen,
+    candidatos: vacante.candidatos
+  });
+};
