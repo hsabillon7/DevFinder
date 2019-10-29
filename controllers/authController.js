@@ -1,6 +1,7 @@
 const passport = require("passport");
 const mongoose = require("mongoose");
 const Vacante = mongoose.model("Vacante");
+const Usuario = mongoose.model("Usuario");
 
 exports.autenticarUsuario = passport.authenticate("local", {
   successRedirect: "/administrar",
@@ -44,4 +45,24 @@ exports.verificarUsuario = (req, res, next) => {
 
   // Si no se autenticó, redirecccionarlo al inicio de sesión
   res.redirect("/iniciarSesion");
+};
+
+// Muestra el formulario de reseteo de contraseña
+exports.formularioReestablecerPassword = (req, res) => {
+  res.render("reestablecerPassword", {
+    nombrePagina: "Reestablece tu contraseña",
+    tagline:
+      "Si ya tienes una cuenta en DevFinder pero olvidaste tu contraseña, favor coloca tu correo electrónico."
+  });
+};
+
+exports.enviarToken = async (req, res) => {
+  // Verificar si el correo electrónico es válido
+  const usuario = await Usuario.findOne({ email: req.body.email });
+
+  // Si el usuario no existe
+  if (!usuario) {
+    req.flash("error", ["El correo electrónico ingresado no existe"]);
+    return res.redirect("/reestablecerPassword");
+  }
 };

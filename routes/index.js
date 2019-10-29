@@ -109,5 +109,12 @@ module.exports = () => {
     vacanteController.mostrarCandidatos
   );
 
+  // Reestablecer la contraseña del usuario
+  router.get(
+    "/reestablecerPassword",
+    authController.formularioReestablecerPassword
+  );
+  router.post("/reestablecerPassword", authController.enviarToken);
+
   return router;
 };
