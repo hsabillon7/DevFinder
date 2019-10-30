@@ -2,6 +2,8 @@ const passport = require("passport");
 const mongoose = require("mongoose");
 const Vacante = mongoose.model("Vacante");
 const Usuario = mongoose.model("Usuario");
+const crypto = require("crypto");
+const enviarEmail = require("../handlers/email");
 
 exports.autenticarUsuario = passport.authenticate("local", {
   successRedirect: "/administrar",
@@ -65,4 +67,51 @@ exports.enviarToken = async (req, res) => {
     req.flash("error", ["El correo electrónico ingresado no existe"]);
     return res.redirect("/reestablecerPassword");
   }
+
+  // El usuario existe, generar el token
+  usuario.token = crypto.randomBytes(20).toString("hex");
+  usuario.expira = Date.now() + 3600000;
+
+  // Guardar el usuario
+  await usuario.save();
+
+  // Generar la URL
+  const resetUrl = `http://${req.headers.host}/reestablecerPassword/${usuario.token}`;
+
+  // Enviar la notificación por email
+  await enviarEmail.enviar({
+    usuario,
+    subject: "Reestablecer tu contraseña",
+    template: "resetPassword",
+    resetUrl
+  });
+
+  // Redireccionar
+  req.flash("correcto", [
+    "Verifica tu correo electrónico para seguir las instrucciones"
+  ]);
+  res.redirect("/iniciarSesion");
+};
+
+// Mostrar el formulario de cambio de contraseña
+exports.formularioNuevoPassword = async (req, res) => {
+  // buscar el usuario por medio del token y la fecha de expiración
+  const usuario = await Usuario.findOne({
+    token: req.params.token,
+    expira: { $gt: Date.now() }
+  });
+
+  // No se pudo encontrar el usuario con el token o token vencido
+  if (!usuario) {
+    req.flash("error", [
+      "Solicitud expirada. Vuelve a solicitar el cambio de contraseña"
+    ]);
+    return res.redirect("/reestablecerPassword");
+  }
+
+  // Mostrar el formulario de nueva password
+  res.render("nuevaPassword", {
+    nombrePagina: "Ingresa tu nueva contraseña",
+    tagline: "Asegurate de utilizar una contraseña segura"
+  });
 };

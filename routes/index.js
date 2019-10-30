@@ -115,6 +115,10 @@ module.exports = () => {
     authController.formularioReestablecerPassword
   );
   router.post("/reestablecerPassword", authController.enviarToken);
+  router.get(
+    "/reestablecerPassword/:token",
+    authController.formularioNuevoPassword
+  );
 
   return router;
 };
