@@ -10,6 +10,7 @@ const MongoStore = require("connect-mongo")(session);
 const bodyParser = require("body-parser");
 const flash = require("connect-flash");
 const passport = require("./config/passport");
+const createError = require("http-errors");
 
 // Habilitando el archivo de variables de entorno
 require("dotenv").config({ path: "variables.env" });
@@ -61,5 +62,24 @@ app.use((req, res, next) => {
 });
 
 app.use("/", router());
+
+// 404
+// app.use((req, res, next) => {
+//   next(createError(404, "No encontrado"));
+// });
+
+// Administración de los errores
+app.use((error, req, res) => {
+  // res.locals.messages = error.messages;
+
+  const status = error.status || 500;
+  // res.locals.status = status;
+  // res.status(status);
+
+  res.render("error", {
+    status,
+    messages: "No encontrado"
+  });
+});
 
 app.listen(process.env.PORT);

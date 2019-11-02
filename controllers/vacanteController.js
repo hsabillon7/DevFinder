@@ -70,8 +70,6 @@ exports.editarVacante = async (req, res, next) => {
   // Convertir las skills a un arreglo de skills
   vacanteEditada.skills = req.body.skills.split(",");
 
-  console.log(vacanteEditada);
-
   // Almacenar la vacante editada
   const vacante = await Vacante.findOneAndUpdate(
     { url: req.params.url },
@@ -211,5 +209,21 @@ exports.mostrarCandidatos = async (req, res, next) => {
     nombre: req.user.nombre,
     imagen: req.user.imagen,
     candidatos: vacante.candidatos
+  });
+};
+
+// Buscador
+exports.buscarVacantes = async (req, res) => {
+  const vacantes = await Vacante.find({
+    $text: {
+      $search: req.body.q
+    }
+  });
+
+  // Mostrar las vacantes
+  res.render("home", {
+    nombrePagina: `Resultados para la búsqueda: ${req.body.q}`,
+    barra: true,
+    vacantes
   });
 };

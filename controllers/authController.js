@@ -115,3 +115,33 @@ exports.formularioNuevoPassword = async (req, res) => {
     tagline: "Asegurate de utilizar una contraseña segura"
   });
 };
+
+// Almacena la nueva contraseña
+exports.almacenarNuevaPassword = async (req, res) => {
+  // buscar el usuario por medio del token y la fecha de expiración
+  const usuario = await Usuario.findOne({
+    token: req.params.token,
+    expira: { $gt: Date.now() }
+  });
+
+  // No se pudo encontrar el usuario con el token o token vencido
+  if (!usuario) {
+    req.flash("error", [
+      "Solicitud expirada. Vuelve a solicitar el cambio de contraseña"
+    ]);
+    return res.redirect("/reestablecerPassword");
+  }
+
+  // Obtener el nuevo password
+  usuario.password = req.body.password;
+  // Limpiar los valores que ya no son requeridos
+  usuario.token = undefined;
+  usuario.expira = undefined;
+
+  // Almacenar los valores en la base de datos
+  await usuario.save();
+
+  // Redireccionar
+  req.flash("correcto", ["Contraseña modificada correctamente"]);
+  res.redirect("/iniciarSesion");
+};

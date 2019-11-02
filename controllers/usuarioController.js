@@ -14,8 +14,6 @@ exports.formularioCrearCuenta = (req, res) => {
 
 // Almacena una cuenta de usuario
 exports.agregarUsuario = async (req, res, next) => {
-  console.log(req.body);
-
   // Verificar que no existan errores de validación
   const errores = validationResult(req);
   const erroresArray = [];

@@ -119,6 +119,13 @@ module.exports = () => {
     "/reestablecerPassword/:token",
     authController.formularioNuevoPassword
   );
+  router.post(
+    "/reestablecerPassword/:token",
+    authController.almacenarNuevaPassword
+  );
+
+  // Buscador
+  router.post("/buscador", vacanteController.buscarVacantes);
 
   return router;
 };
