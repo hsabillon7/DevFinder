@@ -64,21 +64,19 @@ app.use((req, res, next) => {
 app.use("/", router());
 
 // 404
-// app.use((req, res, next) => {
-//   next(createError(404, "No encontrado"));
-// });
+app.use((req, res, next) => {
+  next(createError(404, "La página que has solicitado no existe"));
+});
 
 // Administración de los errores
-app.use((error, req, res) => {
-  // res.locals.messages = error.messages;
-
+app.use((error, req, res, next) => {
   const status = error.status || 500;
-  // res.locals.status = status;
-  // res.status(status);
+  res.locals.status = status;
+  res.status(status);
 
   res.render("error", {
     status,
-    messages: "No encontrado"
+    message: error.message
   });
 });
 
