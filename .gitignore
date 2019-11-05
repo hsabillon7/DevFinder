@@ -90,3 +90,13 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
+
+# Omitir archivos de OSX
+.DE_Store
+
+# Omitir los archivos de subida públicos
+public/uploads/cv/*
+public/uploads/perfiles/*
+
+# Omitir las variables de entorno
+variables.env
